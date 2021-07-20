@@ -61,21 +61,22 @@ st.bar_chart(bar_data['result_margin'])
 #line chart
 df = pd.DataFrame(matches_df[:200], columns = ["result_margin"])
 st.line_chart(df)
-st.title("Man_of _the_match ")
+#Man_of _the_match count of individual player in all seasons
+st.title("Man_of _the_match of individual player")
 select5 = st.selectbox('player',matches_df['player_of_match'].unique())
 man_of_match = matches_df.loc[matches_df['player_of_match']==select5]
 st.write(str(man_of_match['player_of_match'].count()))
-
+#Man_of_the_match winners per season 
 st.title("Man_of_the_match Winners")
 select12 = st.selectbox('season_wise',matches_df['Season'].unique())
 for x in matches_df['Season'].unique():
     list = []
     matched = matches_df.loc[matches_df['Season']==select12]
 st.write(matched['player_of_match'].value_counts())
-
+#totsl man_of_the_match winners dataframe together
 st.title("Total_Man_of _the_match awards")
 st.write(matches_df['player_of_match'].value_counts())
-
+#win percentage of teams with respect to ground
 st.title("win% in a city")
 select6 = st.selectbox('city',matches_df['city'].unique())
 select7 = st.selectbox('team',matches_df['winner'].unique())
@@ -86,7 +87,7 @@ total_wins = win_select['city'].count()
 
 a = (total_wins/total_matches)*100
 st.write(a)
-
+# one on one stats , if we select a batsman and a bowler , we can get the results of no.of sixes ,fours ,total_runs and wickets against the particular bowler 
 st.title("select batsman and bowler for ONE-ONE Stats")
 select1 = st.selectbox('Select a batsman',ball2ball_df['batsman'].unique())
 select2 = st.selectbox('Select a bowler',ball2ball_df['bowler'].unique())
@@ -166,10 +167,9 @@ fig4 = go.Figure(go.Indicator(
              }))
 if st.button('Wickets Indicator'):
     st.write(fig4)
-
-st.title("boundary stats")
+#Boundary count of a individual player in all seasons combined .
+st.title("Boundary Count")
 select3 = st.selectbox('Select batsman',ball2ball_df['batsman'].unique())
-
 ballsperboundary1_df = ball2ball_df.loc[(ball2ball_df["batsman"]==select3)&(ball2ball_df['batsman_runs']==6)]
 ballsperboundary2_df = ball2ball_df.loc[(ball2ball_df["batsman"]==select3)&(ball2ball_df['batsman_runs']==4)]
 shepherd1 = select3
@@ -177,10 +177,9 @@ string_in_string = "total boundaries scored by {}.".format(shepherd1)
 boundaries = ballsperboundary1_df['batsman_runs'].count() + ballsperboundary2_df['batsman_runs'].count()
 st.title(string_in_string)
 st.write(str(boundaries))
-
+#No.of balls that a batsman take for scoring a boundary .
 st.title("Balls per boundary")
 select4 = st.selectbox('batsman',ball2ball_df['batsman'].unique())
-
 individual = ball2ball_df.loc[ball2ball_df['batsman']==select4]
 count = 0
 sum = 0
@@ -195,28 +194,17 @@ for x in individual['batsman_runs']:
 avg_balls_for_boundary = sum/len(list)
 if st.button("balls per boundary"):
     st.write(str(avg_balls_for_boundary))
-
-
-
-
-
 import plotly.graph_objects as go
-
+#Total_runs scored by a batsman in the IPL 
 st.title("Total Runs in IPL")
 select8 = st.selectbox('Total Runs in IPL',ball2ball_df['batsman'].unique())
-
 if st.button("total runs"):
-    
     individual_total = ball2ball_df.loc[ball2ball_df['batsman']==select8]
     count = 0
     sum = 0
-
     for x in individual_total['batsman_runs']:
         if (x>0):
                 count = count + x
-
-    
-
     fig = go.Figure(go.Indicator(
         domain = {'x': [0, 1], 'y': [0, 1]},
         value = count,
@@ -229,18 +217,15 @@ if st.button("total runs"):
                     {'range': [250, 400], 'color': "gray"}],
                 }))
     st.write(fig)
+#Batting stats per season ( centuries , fifties , thirties per season )
 st.title("batting stats dataframe in all seasons")
 select9 = st.selectbox('batsman_stats',ball2ball_df['batsman'].unique())
-
 dff = pd.DataFrame(columns = ['player','centuries', 'fifties','thirties','Season'],index=None)
 if st.button("batting_stats_dataframe"):
     for x in ball2ball_df['Season'].unique():
         list=[]
         matched = ball2ball_df.loc[ball2ball_df['Season']==x]
-    
         for y in matched['id'].unique():
-        
-
             matches = matched.loc[ball2ball_df['id']==y]
             full_dhoni = matches.loc[(matches['batsman']==select9)]
             count =0
@@ -263,21 +248,16 @@ if st.button("batting_stats_dataframe"):
         listed = [select9,centuries,fifties,thirties,x]
         dff.loc[len(dff)] = listed
         dff.index = [""] * len(dff)
-    
     st.write(dff)
+#Bowling stats per season dataframe for individual bowler
 st.title("bowling stats dataframe in all seasons")
 select10 = st.selectbox('bowler stats',ball2ball_df['bowler'].unique())
-
 if st.button("bowling_stats_dataframe"):
     dff = pd.DataFrame(columns = ['player','total_wickets', 'five_wicket_hauls','three_wicket_hauls','Season'],index=None)
-
     for x in ball2ball_df['Season'].unique():
         list=[]
         matched = ball2ball_df.loc[ball2ball_df['Season']==x]
-    
         for y in matched['id'].unique():
-        
-
             matches = matched.loc[ball2ball_df['id']==y]
             full_dhoni = matches.loc[(matches['bowler']==select10)]
             count =0
@@ -292,7 +272,6 @@ if st.button("bowling_stats_dataframe"):
         total_wickets_count = 0
         for z in list:
             total_wickets_count = total_wickets_count+z
-            
             if(z>=5):
                 five_wicket_hauls = five_wicket_hauls + 1
             if(z>=3):
@@ -303,8 +282,7 @@ if st.button("bowling_stats_dataframe"):
         dff.loc[len(dff)] = listed
         dff.index = [""] * len(dff)
     st.write(dff)
-
-
+#dismissal types for a batsman in a season and also total dismissals (types_count)
 st.title("dismissal_types")
 select13 = st.selectbox('batsman_dismissals',ball2ball_df['batsman'].unique())
 select14 = st.selectbox('season_wise_dismissals',matches_df['Season'].unique())
@@ -330,6 +308,7 @@ select17 = st.selectbox('batsman_dismissals_by bowler',ball2ball_df['batsman'].u
 dismissals = ball2ball_df.loc[(ball2ball_df['batsman']==select17)&(ball2ball_df['is_wicket']==1)]
 if st.button("batsman_dismissals_by bowler"):
     st.write(dismissals['bowler'].value_counts()) 
+#Average of a batsman
 st.title("Average of the batsman")
 select18 = st.selectbox('average_of_batsman',ball2ball_df['batsman'].unique())  
 individual_total = ball2ball_df.loc[ball2ball_df['batsman']==select18]
@@ -344,6 +323,8 @@ for x in wickets['is_wicket']:
         sum = sum + 1
 average = count/sum
 st.write(average)
+#strike_rate of a batsman after particular number of overs
+# Note - there are total 20 overs but the count starts from 0.1,0.2 so it ends with 19.5,19.6 , so for selecting above 15 overs , we must select >13 because 13.6 is 14th over .
 st.title("strike_rate after no.of overs")
 select19 = st.selectbox('strike_rate after 15 overs for a batsman',ball2ball_df['batsman'].unique())
 select20 = st.selectbox('over_of _match',ball2ball_df['over'].unique())
